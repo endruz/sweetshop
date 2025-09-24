@@ -1,0 +1,15 @@
+{
+    "recommendations": [
+        // Python extensions
+        "ms-python.python",
+        "ms-python.vscode-pylance",
+        "ms-python.debugpy",
+        "ms-python.vscode-python-envs",
+        "charliermarsh.ruff",
+        "astral-sh.ty",
+        // Markdown extension
+        "DavidAnson.vscode-markdownlint",
+        // TOML extension
+        "tamasfe.even-better-toml"
+    ]
+}
