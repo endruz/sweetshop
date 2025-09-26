@@ -1,15 +1,15 @@
+import re
 from uuid import uuid4
 from worker import Worker
 from collections.abc import Callable
-import re
 from collections import deque, OrderedDict
 
 
 class PipelineNode:
-    def __init__(self, worker: Worker, node_id: str | None = None):
-        self.id = node_id or str(uuid4())
+    def __init__(self, worker: Worker, inputs: dict = {}):
+        self.id = str(uuid4())
         self.worker: Worker = worker
-        self.inputs: dict = {}
+        self.inputs: dict = inputs
         self.outputs: dict = {}
         self.next_nodes: list["PipelineNode"] = []
         self.condition: Callable | None = None
@@ -40,13 +40,7 @@ class Pipeline:
     def __init__(self, name: str | None = None):
         self.name = name or "Pipeline"
         self.id = str(uuid4())
-        self.nodes: dict[str, PipelineNode] = {}
         self.start_nodes: list[PipelineNode] = []
-
-    def add_worker(self, worker: Worker, node_id: str | None = None) -> PipelineNode:
-        node: PipelineNode = PipelineNode(worker, node_id)
-        self.nodes[node.id] = node
-        return node
 
     def set_start(self, node: PipelineNode):
         if node not in self.start_nodes:
@@ -87,4 +81,4 @@ class Pipeline:
         return context
 
     def __repr__(self):
-        return f"Pipeline(name='{self.name}', nodes={len(self.nodes)})"
+        return f"Pipeline(name='{self.name}', id='{self.id}')"
