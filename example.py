@@ -1,5 +1,5 @@
-from worker import worker_registry
 from pipeline import Pipeline, PipelineNode
+from worker import worker_registry
 
 
 @worker_registry.register_worker()

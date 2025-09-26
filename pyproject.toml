@@ -5,3 +5,8 @@ description = "..."
 readme = "README.md"
 requires-python = ">=3.12"
 dependencies = ["ruff", "ty"]
+
+[tool.ruff.lint]
+extend-select = [
+    "I", # isort
+]

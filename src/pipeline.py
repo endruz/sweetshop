@@ -1,8 +1,9 @@
 import re
-from uuid import uuid4
-from worker import Worker
+from collections import OrderedDict, deque
 from collections.abc import Callable
-from collections import deque, OrderedDict
+from uuid import uuid4
+
+from worker import Worker
 
 
 class PipelineNode:
