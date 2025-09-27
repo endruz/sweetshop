@@ -37,20 +37,11 @@ dependencies = [
     { name = "ty" },
 ]
 
-[package.optional-dependencies]
-dev = [
-    { name = "ruff" },
-    { name = "ty" },
-]
-
 [package.metadata]
 requires-dist = [
     { name = "ruff" },
-    { name = "ruff", marker = "extra == 'dev'" },
     { name = "ty" },
-    { name = "ty", marker = "extra == 'dev'" },
 ]
-provides-extras = ["dev"]
 
 [[package]]
 name = "ty"
