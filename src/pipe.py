@@ -4,6 +4,7 @@ from typing import Generic, Type
 from uuid import uuid4
 
 from base_data import TData
+from registry import BaseRegistry
 from worker import Worker
 
 
@@ -29,8 +30,7 @@ class Node(Generic[TData]):
 
 
 class Pipe(Generic[TData]):
-    def __init__(self, data_type: Type[TData], name: str = "Pipe"):
-        self.name = name
+    def __init__(self, data_type: Type[TData]):
         self.data_type: Type[TData] = data_type
         self.id = str(uuid4())
         self.start_node: Node | None = None
@@ -103,11 +103,11 @@ class Pipe(Generic[TData]):
         return self
 
     def execute(self, data: TData) -> TData:
-        """Execute the pipeline with the given initial data"""
+        """Execute the pipe with the given initial data"""
         if self.start_node is None:
-            raise ValueError("Pipeline has no start node")
+            raise ValueError("Pipe has no start node")
 
-        # Use BFS to traverse the pipeline
+        # Use BFS to traverse the pipe
         queue = deque([(self.start_node, data)])
         final_results = []
 
@@ -136,3 +136,29 @@ class Pipe(Generic[TData]):
 
     def __repr__(self):
         return f"Pipe(name='{self.name}', id='{self.id}')"
+
+
+class PipeRegistry(BaseRegistry[Pipe]):
+    """Registry for managing Pipe instances."""
+
+    def __getattr__(self, name: str) -> Pipe:
+        """Allow accessing pipes as attributes."""
+        if self.exists(name):
+            return self._registry[name]
+        raise AttributeError(f"Pipe '{name}' not found in registry")
+
+    def register_pipe(self, name: str | None = None) -> Callable:
+        """Register decorator for pipes"""
+
+        def wrapper(func: Callable[[], Pipe]) -> None:
+            nonlocal name
+            name = name or getattr(func, "__name__", "unknown_pipe")
+            pipe: Pipe = func()
+
+            self.register(name, pipe)
+
+        return wrapper
+
+
+# Global pipe registry instance
+pipe_registry = PipeRegistry()

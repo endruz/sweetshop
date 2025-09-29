@@ -1,5 +1,5 @@
 from base_data import BaseData
-from pipe import Pipe
+from pipe import Pipe, pipe_registry
 from worker import worker_registry
 
 
@@ -38,9 +38,10 @@ def reduce_one(data: MathData) -> MathData:
     return MathData(data.value - 1)
 
 
-def create_pipeline() -> Pipe:
+@pipe_registry.register_pipe()
+def example_pipe() -> Pipe:
     pipe = (
-        Pipe(data_type=MathData, name="optimized_math_pipeline")
+        Pipe(data_type=MathData)
         .start_with(worker_registry.add_.cfg(b=5))  # 10 + 5 = 15
         .then(worker_registry.multiply_.cfg(b=2))  # 15 * 2 = 30
         .then(worker_registry.divide_.cfg(b=3))  # 30 / 3 = 10
@@ -56,7 +57,7 @@ def create_pipeline() -> Pipe:
 
 
 if __name__ == "__main__":
-    pipe = create_pipeline()
+    pipe = pipe_registry.example_pipe
     data = MathData(10)
     result = pipe.execute(data)
     print(result)  # MathData(value=21)

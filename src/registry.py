@@ -11,6 +11,8 @@ class BaseRegistry[T]:
 
     def register(self, name: str, obj: T) -> None:
         """Register an object with the given name."""
+        if self.exists(name):
+            raise KeyError(f"{type(obj).__name__} '{name}' already registered")
         self._registry[name] = obj
 
     def get(self, name: str) -> T:

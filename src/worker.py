@@ -12,7 +12,7 @@ class Worker(Generic[TData]):
     def __init__(
         self, func: Callable, name: str | None = None, data_type: Type[TData] = None
     ):
-        self.name: str = name or getattr(func, "__name__", "unknown_function")
+        self.name: str = name or getattr(func, "__name__", "unknown_worker")
         self.func: Callable = func
         self.data_type: Type[TData] = data_type
 
@@ -33,12 +33,6 @@ class Worker(Generic[TData]):
 
 class WorkerRegistry(BaseRegistry[Worker]):
     """Registry for managing Worker instances."""
-
-    def register(self, name: str, worker: Worker) -> None:
-        """Register a worker with the given name."""
-        if self.exists(name):
-            raise KeyError(f"Worker '{name}' already registered")
-        super().register(name, worker)
 
     def __getattr__(self, name: str) -> Worker:
         """Allow accessing workers as attributes for createnode() calls."""
