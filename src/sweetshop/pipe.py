@@ -3,9 +3,9 @@ from collections.abc import Callable
 from typing import Generic, Type
 from uuid import uuid4
 
-from base_data import TData
-from registry import BaseRegistry
-from worker import Worker
+from sweetshop.base_data import TData
+from sweetshop.registry import BaseRegistry
+from sweetshop.worker import Worker
 
 
 class Node(Generic[TData]):

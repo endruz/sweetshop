@@ -1,11 +1,11 @@
 from collections.abc import Callable
 from typing import TYPE_CHECKING, Generic, Type
 
-from base_data import TData
-from registry import BaseRegistry
+from sweetshop.base_data import TData
+from sweetshop.registry import BaseRegistry
 
 if TYPE_CHECKING:
-    from pipe import Node
+    from sweetshop.pipe import Node
 
 
 class Worker(Generic[TData]):
@@ -19,7 +19,7 @@ class Worker(Generic[TData]):
     def cfg(self, **kwargs) -> "Node":
         """Create a configured node for this worker"""
         # Import here to avoid circular import
-        from pipe import Node
+        from sweetshop.pipe import Node
 
         return Node(self, kwargs)
 
@@ -36,6 +36,7 @@ class WorkerRegistry(BaseRegistry[Worker]):
 
     def __getattr__(self, name: str) -> Worker:
         """Allow accessing workers as attributes for createnode() calls."""
+
         if self.exists(name):
             return self._registry[name]
         raise AttributeError(f"Worker '{name}' not found in registry")

@@ -1,6 +1,4 @@
-from base_data import BaseData
-from pipe import Pipe, pipe_registry
-from worker import worker_registry
+from sweetshop import BaseData, Pipe, pipe_registry, worker_registry
 
 
 class MathData(BaseData):
