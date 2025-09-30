@@ -1,3 +1,5 @@
 {
     "ruff.configuration": "${workspaceFolder}/pyproject.toml",
+    "python.testing.pytestEnabled": true,
+    "python.testing.autoTestDiscoverOnSaveEnabled": true
 }

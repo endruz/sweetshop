@@ -6,9 +6,21 @@ readme = "README.md"
 requires-python = ">=3.12"
 
 [dependency-groups]
-dev = ["ruff", "ty"]
+dev = ["ruff", "ty", "pytest", "pytest-cov", "pytest-ruff", "pytest-ty"]
 
 [tool.ruff.lint]
 extend-select = [
     "I", # isort
 ]
+
+[tool.pytest.ini_options]
+addopts = ["--cache-clear", "--cov", "--ruff", "--ruff-format", "--ty"]
+testpaths = ["tests"]
+
+[tool.coverage.run]
+branch = true
+source = ["src/sweetshop"]
+
+[tool.coverage.report]
+fail_under = 100
+show_missing = true
