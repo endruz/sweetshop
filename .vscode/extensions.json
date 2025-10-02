@@ -10,6 +10,8 @@
         // Markdown extension
         "DavidAnson.vscode-markdownlint",
         // TOML extension
-        "tamasfe.even-better-toml"
+        "tamasfe.even-better-toml",
+        // Spell checker
+        "streetsidesoftware.code-spell-checker"
     ]
 }
