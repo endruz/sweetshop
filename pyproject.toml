@@ -21,7 +21,7 @@ extend-select = [
 ]
 
 [tool.pytest.ini_options]
-addopts = ["--cache-clear", "--cov"]
+# addopts = ["--cache-clear", "--cov=src/sweetshop"]
 testpaths = ["tests"]
 
 [tool.coverage.run]

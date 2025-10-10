@@ -1,19 +1,8 @@
-"""Tests for registry module."""
+"""Tests for Class BaseRegistry."""
 
 import pytest
 
 from sweetshop.registry import BaseRegistry
-
-
-class RegistryTestItem:
-    """Test item class for registry testing."""
-
-    def __init__(self, name: str, value: int):
-        self.name = name
-        self.value = value
-
-    def __repr__(self):
-        return f"TestItem(name='{self.name}', value={self.value})"
 
 
 class TestBaseRegistry:
@@ -21,13 +10,13 @@ class TestBaseRegistry:
 
     def setup_method(self):
         """Set up test registry for each test."""
-        self.registry = BaseRegistry[RegistryTestItem]()
-        self.item1 = RegistryTestItem("item1", 10)
-        self.item2 = RegistryTestItem("item2", 20)
+        self.registry = BaseRegistry[tuple]()
+        self.item1 = (1,)
+        self.item2 = (2,)
 
     def test_registry_creation(self):
         """Test creating a new registry."""
-        registry = BaseRegistry[RegistryTestItem]()
+        registry = BaseRegistry[tuple]()
         assert len(registry) == 0
         assert list(registry.list_names()) == []
 
@@ -43,7 +32,7 @@ class TestBaseRegistry:
         self.registry.register("test_item", self.item1)
         with pytest.raises(
             KeyError,
-            match="RegistryTestItem 'test_item' already registered",
+            match="tuple 'test_item' already registered",
         ):
             self.registry.register("test_item", self.item2)
 
@@ -52,8 +41,6 @@ class TestBaseRegistry:
         self.registry.register("test_item", self.item1)
         retrieved_item = self.registry.get("test_item")
         assert retrieved_item is self.item1
-        assert retrieved_item.name == "item1"
-        assert retrieved_item.value == 10
 
     def test_get_nonexistent_item(self):
         """Test getting non-existent item raises KeyError."""
@@ -111,8 +98,8 @@ class TestBaseRegistry:
 
     def test_multiple_registries_independent(self):
         """Test that multiple registry instances are independent."""
-        registry1 = BaseRegistry[RegistryTestItem]()
-        registry2 = BaseRegistry[RegistryTestItem]()
+        registry1 = BaseRegistry[tuple]()
+        registry2 = BaseRegistry[tuple]()
 
         registry1.register("item1", self.item1)
         registry2.register("item2", self.item2)
