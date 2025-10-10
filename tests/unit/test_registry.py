@@ -1,5 +1,3 @@
-"""Tests for Class BaseRegistry."""
-
 import pytest
 
 from sweetshop.registry import BaseRegistry
