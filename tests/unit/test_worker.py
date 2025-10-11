@@ -1,20 +1,7 @@
 import pytest
 
-from sweetshop import BaseData, Node, Worker
-
-
-class DummyData(BaseData):
-    """Dummy data class for worker testing."""
-
-    def __init__(self, value: int):
-        super().__init__()
-        self.value = value
-
-    def __repr__(self):
-        return f"DummyData(value={self.value})"
-
-    def __eq__(self, other):
-        return isinstance(other, DummyData) and self.value == other.value
+from sweetshop import Node, Worker
+from tests.conftest import DummyData
 
 
 def func_without_args() -> DummyData:
