@@ -1,7 +1,7 @@
 import pytest
 
 from sweetshop import Worker, WorkerRegistry
-from tests.conftest import DummyData
+from tests.common import DummyData
 
 
 class TestWorkerRegistry:

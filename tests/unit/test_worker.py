@@ -1,7 +1,7 @@
 import pytest
 
 from sweetshop import Node, Worker
-from tests.conftest import DummyData
+from tests.common import DummyData
 
 
 def func_without_args() -> DummyData:
