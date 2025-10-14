@@ -77,21 +77,23 @@ class TestWorkerRegistry:
         """Test registering multiple workers."""
 
         @self.registry.register_worker(data_type=DigitalData)
-        def worker1():
-            return DigitalData(1)
+        def add_one(data: DigitalData) -> DigitalData:
+            return DigitalData(data.value + 1)
 
         @self.registry.register_worker(data_type=DigitalData)
-        def worker2():
-            return DigitalData(2)
+        def subtract_one(data: DigitalData) -> DigitalData:
+            return DigitalData(data.value - 1)
+
+        data = DigitalData(10)
 
         assert len(self.registry) == 2
-        assert self.registry.exists("worker1")
-        assert self.registry.exists("worker2")
+        assert self.registry.exists("add_one")
+        assert self.registry.exists("subtract_one")
 
-        w1 = self.registry.worker1
-        w2 = self.registry.worker2
-        assert w1.execute().value == 1
-        assert w2.execute().value == 2
+        w1 = self.registry.add_one
+        w2 = self.registry.subtract_one
+        assert w1.execute(data).value == 11
+        assert w2.execute(data).value == 9
 
 
 if __name__ == "__main__":
