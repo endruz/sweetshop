@@ -1,17 +1,7 @@
 import pytest
 
 from sweetshop import Node, Worker
-from tests.common import DummyData
-
-
-def func_without_args() -> DummyData:
-    """Simple test function."""
-    return DummyData(42)
-
-
-def func_with_args(data: DummyData, multiplier: int) -> DummyData:
-    """Function that takes arguments."""
-    return DummyData(data.value * multiplier)
+from tests.common.digital_data import DigitalData, add_one, add_value, initial_data
 
 
 class TestWorker:
@@ -19,71 +9,93 @@ class TestWorker:
 
     def test_worker_creation_with_defaults(self):
         """Test creating worker with default name."""
-        worker = Worker(func_without_args, data_type=DummyData)
-        assert worker.name == "func_without_args"
-        assert worker.func == func_without_args
-        assert worker.data_type == DummyData
+        worker = Worker(initial_data, data_type=DigitalData)
+        assert worker.name == "initial_data"
+        assert worker.func == initial_data
+        assert worker.data_type == DigitalData
 
     def test_worker_creation_with_custom_name(self):
         """Test creating worker with custom name."""
-        worker = Worker(func_without_args, name="custom_name", data_type=DummyData)
+        worker = Worker(initial_data, name="custom_name", data_type=DigitalData)
         assert worker.name == "custom_name"
-        assert worker.func == func_without_args
-        assert worker.data_type == DummyData
+        assert worker.func == initial_data
+        assert worker.data_type == DigitalData
 
     def test_worker_creation_with_lambda(self):
         """Test creating worker with lambda function."""
 
-        lambda_func = lambda: DummyData(99)  # noqa: E731
+        lambda_func = lambda: DigitalData(99)  # noqa: E731
 
-        worker = Worker(lambda_func, name="lambda_worker", data_type=DummyData)
+        worker = Worker(lambda_func, name="lambda_worker", data_type=DigitalData)
         assert worker.name == "lambda_worker"
         assert worker.func == lambda_func
 
     def test_worker_execute_no_args(self):
         """Test executing worker with no arguments."""
-        worker = Worker(func_without_args, data_type=DummyData)
-        result = worker.execute()
-        assert isinstance(result, DummyData)
-        assert result.value == 42
+        worker = Worker(initial_data, data_type=DigitalData)
+
+        with pytest.raises(
+            TypeError, match="Expected first argument of type DigitalData, got None"
+        ):
+            worker.execute()
+
+    def test_worker_execute_without_data(self):
+        """Test executing worker without data argument."""
+        worker = Worker(add_one, data_type=DigitalData)
+
+        with pytest.raises(
+            TypeError, match="Expected first argument of type DigitalData, got None"
+        ):
+            worker.execute(value=10)
+
+    def test_worker_execute_with_only_kwargs(self):
+        """Test executing worker with only keyword arguments."""
+        worker = Worker(add_one, data_type=DigitalData)
+        data = DigitalData(10)
+
+        with pytest.raises(
+            TypeError, match="Expected first argument of type DigitalData, got None"
+        ):
+            worker.execute(data=data)
 
     def test_worker_execute_with_args(self):
         """Test executing worker with arguments."""
-        worker = Worker(func_with_args, data_type=DummyData)
-        data = DummyData(10)
-        result = worker.execute(data, 3)
-        assert isinstance(result, DummyData)
-        assert result.value == 30
+        worker = Worker(add_one, data_type=DigitalData)
+        data = DigitalData(10)
+        result = worker.execute(data)
+        assert isinstance(result, DigitalData)
+        assert result.value == 11
 
     def test_worker_execute_with_kwargs(self):
         """Test executing worker with keyword arguments."""
-        worker = Worker(func_with_args, data_type=DummyData)
-        data = DummyData(5)
-        result = worker.execute(data, multiplier=4)
-        assert result.value == 20
+        worker = Worker(add_value, data_type=DigitalData)
+        data = DigitalData(5)
+        result = worker.execute(data, value=4)
+        assert result.value == 9
 
     def test_worker_cfg_creates_node(self):
         """Test that cfg method creates a Node."""
-        worker = Worker(func_with_args, data_type=DummyData)
-        node = worker.cfg(multiplier=5)
+        worker = Worker(add_value, data_type=DigitalData)
+        node = worker.cfg(value=5)
 
         assert isinstance(node, Node)
         assert node.worker == worker
-        assert node.config == {"multiplier": 5}
+        assert node.config == {"value": 5}
 
-    def test_worker_cfg_empty_kwargs(self):
-        """Test cfg method with empty kwargs."""
-        worker = Worker(func_without_args, data_type=DummyData)
+    def test_worker_cfg_creates_node_without_args(self):
+        """Test that cfg method creates a Node with no config."""
+        worker = Worker(add_value, data_type=DigitalData)
         node = worker.cfg()
 
         assert isinstance(node, Node)
+        assert node.worker == worker
         assert node.config == {}
 
     def test_worker_repr(self):
         """Test worker string representation."""
-        worker = Worker(func_without_args, name="test_worker", data_type=DummyData)
+        worker = Worker(initial_data, name="test_worker", data_type=DigitalData)
         repr_str = repr(worker)
-        assert repr_str == "Worker(name='test_worker', type=DummyData)"
+        assert repr_str == "Worker(name='test_worker', type=DigitalData)"
 
     # TODO: Add test for worker with None data_type
     # TODO: Add test for worker with wrong data_type

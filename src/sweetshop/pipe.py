@@ -10,10 +10,8 @@ from sweetshop.worker import Worker
 
 class Node(Generic[TData]):
     def __init__(self, worker: Worker, config: dict = {}):
-        self.id = str(uuid4())
         self.worker: Worker = worker
         self.config: dict = config
-        self.outputs: dict = {}
         self.next_nodes: list["Node"] = []
         self.condition: Callable | None = None
 
@@ -26,7 +24,7 @@ class Node(Generic[TData]):
         return self.worker.execute(data, **self.config)
 
     def __repr__(self):
-        return f"Node(id='{self.id}', worker={self.worker})"
+        return f"Node(worker={self.worker}, config={self.config})"
 
 
 class Pipe(Generic[TData]):

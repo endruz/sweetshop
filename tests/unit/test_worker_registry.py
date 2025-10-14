@@ -1,7 +1,7 @@
 import pytest
 
 from sweetshop import Worker, WorkerRegistry
-from tests.common import DummyData
+from tests.common.digital_data import DigitalData
 
 
 class TestWorkerRegistry:
@@ -19,36 +19,36 @@ class TestWorkerRegistry:
     def test_register_worker_decorator(self):
         """Test registering worker using decorator."""
 
-        @self.registry.register_worker(data_type=DummyData)
+        @self.registry.register_worker(data_type=DigitalData)
         def test_function():
-            return DummyData(123)
+            return DigitalData(123)
 
         assert self.registry.exists("test_function")
         worker = self.registry.get("test_function")
         assert isinstance(worker, Worker)
         assert worker.name == "test_function"
-        assert worker.data_type == DummyData
+        assert worker.data_type == DigitalData
 
     def test_register_worker_decorator_custom_name(self):
         """Test registering worker with custom name."""
 
-        @self.registry.register_worker(data_type=DummyData, name="custom_worker")
+        @self.registry.register_worker(data_type=DigitalData, name="custom_worker")
         def test_function():
-            return DummyData(456)
+            return DigitalData(456)
 
         assert self.registry.exists("custom_worker")
         assert not self.registry.exists("test_function")
         worker = self.registry.get("custom_worker")
         assert isinstance(worker, Worker)
         assert worker.name == "custom_worker"
-        assert worker.data_type == DummyData
+        assert worker.data_type == DigitalData
 
     def test_getattr_access(self):
         """Test accessing workers via attribute access."""
 
-        @self.registry.register_worker(data_type=DummyData)
+        @self.registry.register_worker(data_type=DigitalData)
         def my_worker():
-            return DummyData(789)
+            return DigitalData(789)
 
         # Test attribute access
         worker = self.registry.my_worker
@@ -66,9 +66,9 @@ class TestWorkerRegistry:
         """Test that decorator returns the original function."""
 
         def original_function():
-            return DummyData(999)
+            return DigitalData(999)
 
-        decorated = self.registry.register_worker(data_type=DummyData)(
+        decorated = self.registry.register_worker(data_type=DigitalData)(
             original_function
         )
         assert decorated == original_function
@@ -76,13 +76,13 @@ class TestWorkerRegistry:
     def test_multiple_workers_registration(self):
         """Test registering multiple workers."""
 
-        @self.registry.register_worker(data_type=DummyData)
+        @self.registry.register_worker(data_type=DigitalData)
         def worker1():
-            return DummyData(1)
+            return DigitalData(1)
 
-        @self.registry.register_worker(data_type=DummyData)
+        @self.registry.register_worker(data_type=DigitalData)
         def worker2():
-            return DummyData(2)
+            return DigitalData(2)
 
         assert len(self.registry) == 2
         assert self.registry.exists("worker1")
