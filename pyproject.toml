@@ -21,7 +21,7 @@ extend-select = [
 ]
 
 [tool.pytest.ini_options]
-# addopts = ["--cache-clear", "--cov=src/sweetshop"]
+addopts = ["--cache-clear", "--cov=src/sweetshop"]
 testpaths = ["tests"]
 
 [tool.coverage.run]
@@ -29,6 +29,5 @@ branch = true
 source = ["src/sweetshop"]
 
 [tool.coverage.report]
-# TODO: Enable this when we have 100% coverage.
-# fail_under = 100
+fail_under = 100
 show_missing = true
