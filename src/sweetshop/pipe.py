@@ -1,7 +1,6 @@
 from collections import deque
 from collections.abc import Callable
 from typing import Generic, Type
-from uuid import uuid4
 
 from sweetshop.base_data import TData
 from sweetshop.registry import BaseRegistry
