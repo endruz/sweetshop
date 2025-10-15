@@ -9,9 +9,9 @@ from sweetshop.worker import Worker
 
 
 class Node(Generic[TData]):
-    def __init__(self, worker: Worker, config: dict = {}):
+    def __init__(self, worker: Worker, config: dict | None = None):
         self.worker: Worker = worker
-        self.config: dict = config
+        self.config: dict = config or {}
         self.next_nodes: list["Node"] = []
         self.condition: Callable | None = None
 
@@ -30,7 +30,6 @@ class Node(Generic[TData]):
 class Pipe(Generic[TData]):
     def __init__(self, data_type: Type[TData]):
         self.data_type: Type[TData] = data_type
-        self.id = str(uuid4())
         self.start_node: Node | None = None
         self.current_node: Node | None = None
         # Branch management
@@ -116,7 +115,7 @@ class Pipe(Generic[TData]):
             try:
                 result_data = current_node.execute(current_data)
             except Exception as e:
-                raise RuntimeError(f"Node {current_node.id} execution failed: {e}")
+                raise RuntimeError(f"Node {current_node} execution failed: {e}")
 
             # Check if this node has any next nodes
             has_next: bool = False
@@ -133,7 +132,7 @@ class Pipe(Generic[TData]):
         return final_results[0]
 
     def __repr__(self):
-        return f"Pipe(name='{self.name}', id='{self.id}')"
+        return f"Pipe(data_type={self.data_type.__name__})"
 
 
 class PipeRegistry(BaseRegistry[Pipe]):
