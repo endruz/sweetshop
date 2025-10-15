@@ -18,7 +18,7 @@ class TestPipeRegistry:
         )
 
     def teardown_method(self):
-        """tear down after each test."""
+        """Tear down after each test."""
         worker_registry.clear()
 
     def test_registry_creation(self):
