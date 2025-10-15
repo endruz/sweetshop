@@ -25,6 +25,11 @@ class Worker(Generic[TData]):
 
     def execute(self, *args, **kwargs) -> TData:
         """Execute worker"""
+        if not args or not isinstance(args[0], self.data_type):
+            raise TypeError(
+                f"Expected first argument of type {self.data_type.__name__}, "
+                f"got {type(args[0]).__name__ if args else 'None'}"
+            )
         return self.func(*args, **kwargs)
 
     def __repr__(self):
