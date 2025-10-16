@@ -1,4 +1,4 @@
-name: Sweetshop CI
+name: CI
 
 on:
   push:
@@ -27,13 +27,5 @@ jobs:
             .venv
           key: ${{ runner.os }}-uv-quality-${{ hashFiles('pyproject.toml', 'uv.lock') }}
           restore-keys: ${{ runner.os }}-uv-quality-
-      - name: Install dependencies
-        run: uv sync --group dev
-      - name: Lint code with ruff
-        run: uv run ruff check
-      - name: Format code with ruff (dry run)
-        run: uv run ruff format --check
-      - name: Type checking with ty
-        run: uv run ty check
-      - name: Run tests
-        run: uv run pytest
+      - name: Run CI checks
+        run: bash ci-checks.sh
